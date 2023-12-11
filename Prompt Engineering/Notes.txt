@@ -1,0 +1,23 @@
+Source: https://learn.deeplearning.ai/chatgpt-prompt-eng
+Principles:
+1. write clear and specific instructions
+2. give model time to think
+
+Tactic 1.1: Use delimiters to clearly indicate distinct parts of the input
+Tactic 1.2: Ask for a structured output
+Tactic 1.3: Ask the model to check whether conditions are satisfied
+Tactic 1.4: "Few-shot" prompting
+Tactic 2.1: Specify the steps required to complete a task
+Tactic 2.2: Instruct the model to work out its own solution before rushing to a conclusion
+
+Summarization: 
+- Summarize in {x} words for {role}
+- Extract relevant information
+
+Inferring:
+- Identify the following from the document
+
+Transforming (e.g, translation)
+
+Expanding (bullet points -> paragraphs)
+adjust temperature (higher, more random)
