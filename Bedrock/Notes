@@ -1,0 +1,90 @@
+Foundational Model 
+- Text generation, Summarization, Information extraction, Question answering, Chatbot
+
+Inference Parameters
+- Top P/nucleus sampling - cuts low probability word choices
+- Top K - limits word choices to K
+- Temperature - randomness in word choice
+
+unseen documents provides FMs with domian-specific knwoledge
+
+embeddings - BEdrock has Aamzon Titan Embeddings G1
+vector databases - for ultra-fast similarity search (K-NN or cosine similarity)
+    - Amazon OpenSearch Service or Serverless
+    - pgvector extrension in Amazon RDS or Aurora PostgresSQL
+    - Pinecone (AWS Marketplace)
+    - Open source, in-memory (e.g., Chroma, Facebook AI Similarity Search or FAISS)
+
+Vector databases and context are used in Retreival Augmented Generation 
+
+Chatbots - prompt history store
+Front-end app - user interface for FM 
+
+Fine-tuning ( to may address RAG limitation )
+- Prompt-based learning
+- Domain adaptation
+
+```
+%pip install --upgrade boto3
+import boto3
+import json
+bedrock = boto3.client(service_name='bedrock')
+# list all FM
+model_list=bedrock.list_foundation_models()
+for x in range(len(model_list.get('modelSummaries'))):
+     print(model_list.get('modelSummaries')[x]['modelId'])
+
+# Invoke model
+bedrock_rt = boto3.client(service_name='bedrock-runtime')
+prompt = "What is Amazon Bedrock?"
+configs= {
+"inputText": prompt,
+"textGenerationConfig": {
+"maxTokenCount": 4096,
+"stopSequences": [],
+"temperature":0,
+"topP":1
+}
+}
+body=json.dumps(configs)
+modelId = 'amazon.titan-tg1-large'
+accept = 'application/json'
+contentType = 'application/json'
+response = bedrock_rt.invoke_model(   # also see InvokeModelWithResponseStream
+     body=body,
+     modelId=modelId,
+     accept=accept,
+     contentType=contentType
+)
+response_body = json.loads(response.get('body').read())
+print(response_body.get('results')[0].get('outputText')) 
+```
+
+PRIVACY
+Note: use AWS PrivateLink with Amazon Bedrock to establish private connectivity between your FMs and your virtual private cloud (VPC) 
+see https://docs.aws.amazon.com/bedrock/latest/userguide/security.html for security
+Governance and auditability: Cloudwatch (usage metrics), CLoudtrail (monitor API activity)
+see https://docs.aws.amazon.com/bedrock/latest/userguide/monitoring.html
+
+LangChain integrations for:
+- models: Amazon Titan Text, AI21 Labs Jurassic, Anthropic Claude, and Cohere Command
+- prompt templates
+- indexes
+- memory
+- chains
+- agents
+
+```
+from langchain.llms import Bedrock
+
+inference_modifiers = {"temperature": 0.3, "maxTokenCount": 512}
+
+llm = Bedrock(
+     client = boto3_bedrock,
+     model_id="amazon.titan-tg1-large"
+     model_kwargs =inference_modifiers
+)
+
+response = llm.predict("What is the largest city in Vermont?")
+print(response) 
+```
