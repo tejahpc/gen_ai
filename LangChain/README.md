@@ -146,7 +146,6 @@ chain = MultiPromptChain(router_chain=router_chain,
                          default_chain=default_chain, verbose=True
                         )
 chain.run("What is black body radiation?")
-```
 
 # RAG
 
