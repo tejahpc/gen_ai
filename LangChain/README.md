@@ -149,6 +149,7 @@ chain.run("What is black body radiation?")
 ```
 
 # RAG
+
 ```
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
@@ -208,6 +209,7 @@ index = VectorstoreIndexCreator(
 ```
 
 ### LLM-Generated examples
+
 ```
 from langchain.evaluation.qa import QAGenerateChain
 example_gen_chain = QAGenerateChain.from_llm(ChatOpenAI(model=llm_model))
